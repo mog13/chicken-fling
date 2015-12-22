@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import signal
 import sys
@@ -30,16 +30,21 @@ class Server():
     if sock == self.mysock:
       sockfd, addr = self.mysock.accept()
       self.SOCKETS.append(sockfd)
-      print("Client (%s, %s) connected" % addr)
+      print "Client (%s, %s) connected" % addr
     else:
       data = sock.recv(self.BUFFER_SIZE)
       if data:
-        return data.decode("utf-8")
+        try:
+          return data.decode("utf-8")
+        except UnicodeDecodeError as e:
+          print >> sys.stderr, "Warning: " + str(e)
       else:
         # remove the socket that's broken
         if sock in Server.SOCKETS:
             self.SOCKETS.remove(sock)
             print("Removed connection")
+
+      return None
 
   def listen(self):
     """
@@ -47,7 +52,7 @@ class Server():
     """
     self.mysock.bind((self.HOST, self.PORT))
     self.mysock.listen(10)
-    print('Listening on %s port %s' % (self.HOST, self.PORT))
+    print 'Listening on %s port %s' % (self.HOST, self.PORT)
 
     self.SOCKETS.append(self.mysock)
 
@@ -59,7 +64,10 @@ class Server():
         1
       )
       for sock in ready_to_read:
-        print(self._process_read(sock), end="")
+        command = self._process_read(sock)
+        if command is not None:
+          print command,
+          sock.send("This is my response for you: :D :D\n")
 
     self.mysock.close()
 
@@ -71,14 +79,14 @@ class ChickenFling:
 
   @staticmethod
   def signal_int(signal, frame):
-    print("\nShutting Down...", end="")
+    print "\nShutting Down...",
     ChickenFling.running = False
 
   @staticmethod
   def main():
+    signal.signal(signal.SIGINT, ChickenFling.signal_int)
     server = Server()
     server.listen()
-    print("Exiting!")
+    print "Exiting!"
 
-signal.signal(signal.SIGINT, ChickenFling.signal_int)
 ChickenFling.main()
