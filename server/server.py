@@ -1,63 +1,67 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-import thread
-import threading
-import time
 import signal
 import sys
 import socket
 import select
 
-
-
-class ThreadServer(threading.Thread):
+class Server():
+  """
+  This class is simply setting up the connections and
+  """
 
   SOCKETS = []
+  BUFFER_SIZE = 4096
 
-  def __init__(self, threadID, name, counter):
-    threading.Thread.__init__(self)
-    self.threadID = threadID
-    self.name = name
-    self.counter = counter
+  HOST = '0.0.0.0'
+  PORT = 10000
 
-  def run(self):
-    ThreadServer.listen(self.name, 1, self.counter)
+  def __init__(self):
+    """
+    Set the socket connections ready to go
+    """
+    self.mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    self.mysock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-  @staticmethod
-  def listen(threadName, delay, counter):
-    HOST = '0.0.0.0'
-    PORT = 10000
+  def _process_read(self, sock):
+    """
+    For each read from the client process the data
+    """
+    if sock == self.mysock:
+      sockfd, addr = self.mysock.accept()
+      self.SOCKETS.append(sockfd)
+      print("Client (%s, %s) connected" % addr)
+    else:
+      data = sock.recv(self.BUFFER_SIZE)
+      if data:
+        return data.decode("utf-8")
+      else:
+        # remove the socket that's broken
+        if sock in Server.SOCKETS:
+            self.SOCKETS.remove(incomming)
+            print("Removed connection")
 
-    mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    mysock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    mysock.bind((HOST, PORT))
-    mysock.listen(10)
-    print 'Starting up on %s port %s' % (HOST, PORT)
+  def listen(self):
+    """
+    Set up the connection, and start listening using
+    """
+    self.mysock.bind((self.HOST, self.PORT))
+    self.mysock.listen(10)
+    print('Listening on %s port %s' % (self.HOST, self.PORT))
 
-    ThreadServer.SOCKETS.append(mysock)
+    self.SOCKETS.append(self.mysock)
 
-    while True:
+    while ChickenFling.running is True:
+      ready_to_read, ready_to_write, in_error = select.select(
+        self.SOCKETS,
+        [],
+        [],
+        1
+      )
+      for sock in ready_to_read:
+        command_string = self._process_read(sock)
 
-      if ChickenFling.running is False:
-        mysock.close()
-        thread.exit()
-
-      ready_to_read, ready_to_write, in_error = select.select(ThreadServer.SOCKETS, [], [], 1)
-
-      for incomming in ready_to_read:
-        if incomming == mysock:
-          sockfd, addr = mysock.accept()
-          ThreadServer.SOCKETS.append(sockfd)
-          print "Client (%s, %s) connected" % addr
-        else:
-          data = incomming.recv(10)
-          if data:
-            print "data: " + data
-          else:
-            # remove the socket that's broken
-            if incomming in ThreadServer.SOCKETS:
-                ThreadServer.SOCKETS.remove(incomming)
-                print "Removed connection"
+    self.mysock.close()
 
 """
 Simple class for general program variables
@@ -67,20 +71,14 @@ class ChickenFling:
 
   @staticmethod
   def signal_int(signal, frame):
-    print('Please wait killing threads')
+    print("\nShutting Down...", end="")
     ChickenFling.running = False
 
   @staticmethod
   def main():
+    server = Server()
+    server.listen()
+    print("Exiting!")
 
-    signal.signal(signal.SIGINT, ChickenFling.signal_int)
-
-    # Create new threads
-    thread1 = ThreadServer(1, "Thread-1", 3)
-    thread1.start()
-    thread1.join()
-
-    print "Exiting"
-
-
+signal.signal(signal.SIGINT, ChickenFling.signal_int)
 ChickenFling.main()
