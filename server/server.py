@@ -38,7 +38,7 @@ class Server():
       else:
         # remove the socket that's broken
         if sock in Server.SOCKETS:
-            self.SOCKETS.remove(incomming)
+            self.SOCKETS.remove(sock)
             print("Removed connection")
 
   def listen(self):
@@ -59,7 +59,7 @@ class Server():
         1
       )
       for sock in ready_to_read:
-        command_string = self._process_read(sock)
+        print(self._process_read(sock), end="")
 
     self.mysock.close()
 
