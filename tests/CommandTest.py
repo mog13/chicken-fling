@@ -31,6 +31,12 @@ class CommandTest(unittest.TestCase):
     def test_move(self):
         self.assertEqual(self.command.process("1 MOVE EAST"), (1, "MOVE", 90))
 
+    """
+    When I set a different player it should reflect
+    """
+    def test_different_player(self):
+        self.assertEqual(self.command.process("2 GET"), (2, "GET", None))
+
         """
     def test_lock(self):
         self.assertEqual(self.command.process("1 LOCK"), (1, "LOCK", None))
