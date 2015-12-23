@@ -20,6 +20,7 @@ class Player(GameObject):
                 self.move(1,direction)
             elif self.action is Action.FIRE:
                  self.amunition -=1
+                 #fire handled in world
             elif self.action is Action.TURNNORTH:
                 self.direction = 0
             elif self.action is Action.TURNEAST:

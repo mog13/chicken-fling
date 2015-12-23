@@ -13,26 +13,45 @@ class World:
         player.position = position
         self.players.append(player)
 
+
+    def addObject(self,gameObject):
+        self.objects.append(gameObject)
+
     def getPlayers(self):
         return self.players
     #Step assumes all updates are possible, this is because they should be parsed/checked when added to the world
     def doStep(self):
-        #update all bullets
-        for gameObject in self.objects:
-            bullet.update()
+        #create a list of all Objects including players
+        all_objects = self.players + self.objects
+        #iterate over all objects to update
+        for obj in all_objects:
+            obj.update()
+            #maybe check if player and fire etc
 
-        #update all players first
-        for i in range(len(self.players)):
-                self.players[i].update()
-                if self.players[i].action == action.FIRE:
-                    #If the player has fired then create a bullet with there direction and move it on one, then add to the list
-                    newBullet= newBullet(self.players[i].direction,self.players[i].position)
-                    newBullet.update()
-                    self.bullets.append(newBullet)
-                #check to see if the player has hit any bullets
-                for bullet in self.bullets:
-                    if bullet.position.x == self.players[i].position.x and bullet.position.y == self.players[i].position.y:
-                        break;
+        #do collision check with all
+        for i in range(len(all_objects)):
+            for ii in range(len(all_objects)):
+            #skip itself
+                if ii != i:
+                    all_objects[i].has_collision(all_objects[ii])
+
+
+        #remove any objects that are now considered dead
+        #NOTE this does not include players!
+        deadIndexs= []
+        for n in range(len(self.objects)):
+            if self.objects[n].alive == False:
+                deadIndexs.append(self.objects[n])
+
+        for n in range(len(deadIndexs)):
+            self.objects.remove(deadIndexs[n])
+
+
+        # #If the player has fired then create a bullet with there direction and move it on one, then add to the list
+        #  newBullet= newBullet(self.players[i].direction,self.players[i].position)
+        #  newBullet.update()
+        #  self.bullets.append(newBullet)
+
 
 
     def CheckInWorld(self,position):
