@@ -101,5 +101,13 @@ class WorldTest(unittest.TestCase):
         self.world.addPlayer('',Position(2,1))
         self.world.addObject(GameObject(Position(1,3)))
         print(self.world)
+        print('moving player right')
+        self.world.movePlayer(0,90)
+        self.world.doStep()
+        print(self.world)
+        print('moving player down')
+        self.world.movePlayer(0,180)
+        self.world.doStep()
+        print(self.world)
 if __name__ == '__main__':
     unittest.main()

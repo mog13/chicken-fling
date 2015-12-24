@@ -18,7 +18,7 @@ class Player(GameObject):
     def update(self):
         if self.alive == True:
             if self.action is Action.MOVE:
-                self.move(1,direction)
+                self.move(1,self.actionData)
             elif self.action is Action.FIRE:
                  self.amunition -=1
                  #fire handled in world
