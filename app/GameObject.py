@@ -7,20 +7,12 @@ class GameObject(object):
         self.position = position
 
     def move(self,amount,direction):
-        if direction == 0:
-            self.position.y -= amount
-        elif direction == 90:
-            self.position.x += amount
-        elif  direction == 180:
-            self.position.y += amount
-        else:
-            self.position.x -= amount;
-
+        self.position.move_in_dir(direction,amount)
     #do nothing by default on an update
     def update(self):
         pass
 
-    def _is_collision(self,gameObject):
+    def is_collision(self,gameObject):
         return self.position.x == gameObject.position.x and self.position.y == gameObject.position.y
 
     def _on_collision(self, gameObject):
@@ -29,5 +21,5 @@ class GameObject(object):
             self.alive = False
 
     def has_collision(self,gameObject):
-        if(self._is_collision(gameObject)):
+        if(self.is_collision(gameObject)):
             self._on_collision(gameObject)

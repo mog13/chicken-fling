@@ -8,6 +8,7 @@ class Player(GameObject):
         self.direction = 0
         self.amunition = 10
         self.action = Action.NONE
+        self.actionData = 0
         self.id = id
 
     def reload(self):
@@ -21,15 +22,8 @@ class Player(GameObject):
             elif self.action is Action.FIRE:
                  self.amunition -=1
                  #fire handled in world
-            elif self.action is Action.TURNNORTH:
-                self.direction = 0
-            elif self.action is Action.TURNEAST:
-                self.direction = 90
-            elif self.action is Action.TURNSOUTH:
-                self.direction = 180
-            elif self.action is Action.TURNWEST:
-                self.direction = 270
-
+            elif self.action is Action.TURN:
+                self.direction = self.actionData
 
         #reset the action
         self.action == Action.NONE

@@ -82,8 +82,24 @@ class WorldTest(unittest.TestCase):
         self.assertEqual(self.world.players[1].alive,False)
         self.assertEqual(self.world.players[0].alive,True)
 
+    def test_empty_space_function(self):
+        self.world.addPlayer('',Position(0,1))
+        self.world.addObject(GameObject(Position(1,0)))
+        self.assertEqual(self.world._checkSpaceEmpty(Position(0,1)),False)
+        self.assertEqual(self.world._checkSpaceEmpty(Position(1,0)),False)
+        self.assertEqual(self.world._checkSpaceEmpty(Position(0,0)),True)
+    def test_move_player(self):
+        self.world.addPlayer('',Position(0,1))
+        self.world.addObject(GameObject(Position(1,1)))
+        self.world.movePlayer(0,90)
+        self.assertEqual(self.world.players[0].action,0)
 
+        self.world.movePlayer(0,180)
+        self.assertEqual(self.world.players[0].action,1)
 
-
+    def test_draw(self):
+        self.world.addPlayer('',Position(2,1))
+        self.world.addObject(GameObject(Position(1,3)))
+        print(self.world)
 if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,7 @@
 from Player import Player
-
+from GameObject import GameObject
+from Position import Position
+from Action import Action
 class World:
     def __init__(self, width,height):
         self.width = width
@@ -54,16 +56,58 @@ class World:
 
 
 
-    def CheckInWorld(self,position):
+    def checkInWorld(self,position):
         if position.x <0 or position.x > self.width:
-            return false
+            return False
         if position.y <0 or position.y > self.height:
-            return false
-        return true
+            return False
+        return True
 
-    def CheckCollision(self,position):
-        #todo add
-        return 0
+    def _checkSpaceEmpty(self,position):
+        #check that the move would still be in the world
+        if self.checkInWorld(position):
+                #create a game obj to use for the check
+                tempObj = GameObject(position)
+                all_objects = self.players + self.objects
+                for obj in all_objects:
+                    if obj.is_collision(tempObj) == True:
+                        return False
+                return True
 
-    def Move(player,direction):
-        pass
+
+    def movePlayer(self,player,direction):
+        #check the player exists
+        if len(self.players) > player:
+            checkPos = Position(self.players[player].position.x, self.players[player].position.y)
+            checkPos.move_in_dir(direction)
+
+            if self._checkSpaceEmpty(checkPos):
+                self.players[player].action = Action.MOVE
+                self.players[player].actionData = direction
+            else:
+                #raise Exception('Invalid move')
+                pass
+
+
+    def __str__(self):
+        #build a map to fill with all the objects
+        map = []
+        for n in range(self.width*self.height):
+            map.append('[ ]')
+        for obj in self.objects:
+            pos = (obj.position.y * self.width) +obj.position.x
+            map[pos] = '[X]'
+
+        for player in self.players:
+            pos = (player.position.y * self.width) +player.position.x
+            map[pos] = '[P]'
+
+        retStr = ''
+        for n in range(len(map)):
+            if(n%(self.width) == 0):
+                retStr += '\n'
+            retStr += map[n]
+
+        return retStr
+
+    __repr__ = __str__
