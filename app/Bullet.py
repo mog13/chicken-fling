@@ -1,5 +1,6 @@
 from GameObject import GameObject
 
+
 class Bullet(GameObject):
 
     def __init__(self,direction,position):

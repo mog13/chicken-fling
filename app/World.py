@@ -1,5 +1,6 @@
 from Player import Player
 from GameObject import GameObject
+from Bullet import Bullet
 from Position import Position
 from Action import Action
 class World:
@@ -26,9 +27,25 @@ class World:
         #create a list of all Objects including players
         all_objects = self.players + self.objects
         #iterate over all objects to update
+
+        for player in self.players:
+            if(player.action == Action.FIRE):
+                shotBullet = Bullet(player.direction,Position(player.position.x,player.position.y))
+                shotBullet.update();
+                self.addObject(shotBullet)
+
+
         for obj in all_objects:
             obj.update()
-            #maybe check if player and fire etc
+            if self.checkInWorld(obj.position) == False:
+                obj.alive = False;
+            #due to wolrd manipulation fireing functionality is here.
+
+            # if isinstance(obj,Player):
+            #     if(obj.action == Action.FIRE):
+            #         bulletPos = Position(obj.position.x,obj.position.y)
+            #         self.addObject(Bullet(270,bulletPos))
+
 
         #do collision check with all
         for i in range(len(all_objects)):
@@ -73,6 +90,7 @@ class World:
                     if obj.is_collision(tempObj) == True:
                         return False
                 return True
+        return False
 
 
     def movePlayer(self,player,direction):
@@ -85,9 +103,20 @@ class World:
                 self.players[player].action = Action.MOVE
                 self.players[player].actionData = direction
             else:
-                #raise Exception('Invalid move')
-                pass
+                raise Exception('Invalid move')
 
+    def turnPlayer(self,player,direction):
+        if len(self.players) > player:
+            self.players[player].action = Action.TURN
+            self.players[player].actionData = direction
+
+
+    def shootPlayer(self,player):
+        #check the player exists
+        if len(self.players) > player:
+            #self.addObject(Bullet(self.players[player].direction),self.players[player].position)
+            if self.players[player].amunition > 0:
+                self.players[player].action = Action.FIRE
 
     def __str__(self):
         #build a map to fill with all the objects
@@ -96,7 +125,10 @@ class World:
             map.append('[ ]')
         for obj in self.objects:
             pos = (obj.position.y * self.width) +obj.position.x
-            map[pos] = '[X]'
+            if isinstance(obj,Bullet):
+                map[pos] = '[B]'
+            else:
+                map[pos] = '[X]'
 
         for player in self.players:
             pos = (player.position.y * self.width) +player.position.x
