@@ -94,33 +94,34 @@ class WorldTest(unittest.TestCase):
         self.world.addObject(GameObject(Position(1,1)))
         #Player should not be able to move due to game object in the way
 
-        self.assertRaises(Exception, self.world.movePlayer,0,90)
+        self.assertRaises(Exception, self.world.setInputMovePlayer,0,90)
         self.assertEqual(self.world.players[0].action,0)
 
-        self.world.movePlayer(0,180)
+        self.world.setInputMovePlayer(0,180)
         self.assertEqual(self.world.players[0].action,1)
 
     def test_turn_player(self):
         self.world.addPlayer('',Position(0,1))
-        self.world.turnPlayer(0,180)
+        self.world.setInputTurnPlayer(0,180)
         self.assertEqual(self.world.players[0].direction,0)
         self.world.doStep()
         self.assertEqual(self.world.players[0].direction,180)
+
     def test_draw(self):
         self.world.addPlayer('',Position(2,1))
-        self.world.players[0].direction = 190
+        self.world.players[0].direction = 180
         self.world.addObject(GameObject(Position(1,3)))
         print(self.world)
         print('shooting')
-        self.world.shootPlayer(0)
+        self.world.setInputShootPlayer(0)
         self.world.doStep()
         print(self.world)
         print('moving player right')
-        self.world.movePlayer(0,90)
+        self.world.setInputMovePlayer(0,90)
         self.world.doStep()
         print(self.world)
         print('moving player down')
-        self.world.movePlayer(0,180)
+        self.world.setInputMovePlayer(0,180)
         self.world.doStep()
         print(self.world)
 if __name__ == '__main__':

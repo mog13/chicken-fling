@@ -10,42 +10,37 @@ class World:
         self.players = []
         self.objects = []
 
-    #Add a player to the list
+    #Add a player to the world
     def addPlayer(self,name,position):
         player = Player(name,len(self.players))
         player.position = position
         self.players.append(player)
 
-
+    #Add a game object to the world (no players!)
     def addObject(self,gameObject):
         self.objects.append(gameObject)
 
+    #Get a list of all the players
     def getPlayers(self):
         return self.players
+
     #Step assumes all updates are possible, this is because they should be parsed/checked when added to the world
     def doStep(self):
         #create a list of all Objects including players
         all_objects = self.players + self.objects
-        #iterate over all objects to update
 
+        #make any player specific moves that involve changing/polutting the object list
         for player in self.players:
             if(player.action == Action.FIRE):
                 shotBullet = Bullet(player.direction,Position(player.position.x,player.position.y))
                 shotBullet.update();
                 self.addObject(shotBullet)
 
-
+        #iterate over all objects to update
         for obj in all_objects:
             obj.update()
             if self.checkInWorld(obj.position) == False:
                 obj.alive = False;
-            #due to wolrd manipulation fireing functionality is here.
-
-            # if isinstance(obj,Player):
-            #     if(obj.action == Action.FIRE):
-            #         bulletPos = Position(obj.position.x,obj.position.y)
-            #         self.addObject(Bullet(270,bulletPos))
-
 
         #do collision check with all
         for i in range(len(all_objects)):
@@ -65,14 +60,7 @@ class World:
         for n in range(len(deadIndexs)):
             self.objects.remove(deadIndexs[n])
 
-
-        # #If the player has fired then create a bullet with there direction and move it on one, then add to the list
-        #  newBullet= newBullet(self.players[i].direction,self.players[i].position)
-        #  newBullet.update()
-        #  self.bullets.append(newBullet)
-
-
-
+    #Check a given position is in the world
     def checkInWorld(self,position):
         if position.x <0 or position.x > self.width:
             return False
@@ -80,6 +68,7 @@ class World:
             return False
         return True
 
+    #Check there isnt another object ocupying the given space
     def _checkSpaceEmpty(self,position):
         #check that the move would still be in the world
         if self.checkInWorld(position):
@@ -92,8 +81,8 @@ class World:
                 return True
         return False
 
-
-    def movePlayer(self,player,direction):
+    #try and set a players action to move
+    def setInputMovePlayer(self,player,direction):
         #check the player exists
         if len(self.players) > player:
             checkPos = Position(self.players[player].position.x, self.players[player].position.y)
@@ -104,20 +93,23 @@ class World:
                 self.players[player].actionData = direction
             else:
                 raise Exception('Invalid move')
-
-    def turnPlayer(self,player,direction):
+    #try and set a players action to turn
+    def setInputTurnPlayer(self,player,direction):
         if len(self.players) > player:
             self.players[player].action = Action.TURN
             self.players[player].actionData = direction
 
-
-    def shootPlayer(self,player):
+    #try and set a players action to shoot
+    def setInputShootPlayer(self,player):
         #check the player exists
         if len(self.players) > player:
             #self.addObject(Bullet(self.players[player].direction),self.players[player].position)
             if self.players[player].amunition > 0:
                 self.players[player].action = Action.FIRE
+            else:
+                raise Exception('Not enough ammo')
 
+    #world to string draws 2d ASCII map
     def __str__(self):
         #build a map to fill with all the objects
         map = []
