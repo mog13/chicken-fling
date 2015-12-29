@@ -87,8 +87,9 @@ class World:
                 tempObj = GameObject(position)
                 all_objects = self.players + self.objects
                 for obj in all_objects:
-                    if obj.is_collision(tempObj) == True:
-                        return False
+                    if not isinstance(obj,Bullet):
+                        if obj.is_collision(tempObj) == True:
+                            return False
                 return True
         return False
 
@@ -170,23 +171,25 @@ class World:
             map.append(' - ')
         for obj in self.objects:
             pos = (obj.position.y * self.width) +obj.position.x
-            if isinstance(obj,Bullet):
-                map[pos] = ' B '
-            else:
-                map[pos] = ' X '
+            if obj.alive and pos < len(map):
+                if isinstance(obj,Bullet):
+                    map[pos] = ' B '
+                else:
+                    map[pos] = ' X '
 
         for player in self.players:
-            pos = (player.position.y * self.width) +player.position.x
-            if player.direction == 0:
-                map[pos] = ' ^ '
-            elif player.direction == 90:
-                map[pos] = ' > '
-            elif player.direction == 180:
-                map[pos] = ' v '
-            elif player.direction == 270:
-                map[pos] = ' < '
-            else:
-                map[pos] = ' P '
+            if player.alive:
+                pos = (player.position.y * self.width) +player.position.x
+                if player.direction == 0:
+                    map[pos] = ' ^ '
+                elif player.direction == 90:
+                    map[pos] = ' > '
+                elif player.direction == 180:
+                    map[pos] = ' v '
+                elif player.direction == 270:
+                    map[pos] = ' < '
+                else:
+                    map[pos] = ' P '
 
         retStr = ''
         for n in range(len(map)):

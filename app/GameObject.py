@@ -6,9 +6,10 @@ class GameObject(object):
     def __init__(self, position):
         self.position = position
 
-    #Move player in a given direction by a given amount
+    #Move object in a given direction by a given amount
     def move(self,amount,direction):
         self.position.move_in_dir(direction,amount)
+
 
     #do nothing by default on an update
     def update(self):
