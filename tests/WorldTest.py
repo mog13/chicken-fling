@@ -32,6 +32,11 @@ class WorldTest(unittest.TestCase):
         self.world.players[1].id = 1
         self.assertEqual(len(self.world.getPlayers()),2)
 
+    def test_player_exists(self):
+        self.world.addPlayer('Morgan',Position())
+        self.assertEqual(self.world._playerExists(0),True)
+        self.assertEqual(self.world._playerExists(1),False)
+
     """
     objects overlapping should have there collisions correclty processed on world update
     furthermore any 'dead' objects should be cleaned up
@@ -81,32 +86,82 @@ class WorldTest(unittest.TestCase):
         self.world.doStep()
         self.assertEqual(self.world.players[1].alive,False)
         self.assertEqual(self.world.players[0].alive,True)
-
+    """
+    When an object occupies a space it should return false when checked with checkSpaceEmpty
+    """
     def test_empty_space_function(self):
         self.world.addPlayer('',Position(0,1))
         self.world.addObject(GameObject(Position(1,0)))
         self.assertEqual(self.world._checkSpaceEmpty(Position(0,1)),False)
         self.assertEqual(self.world._checkSpaceEmpty(Position(1,0)),False)
         self.assertEqual(self.world._checkSpaceEmpty(Position(0,0)),True)
-
+    """
+    When I set a move it should raise an exception if the player doesnt exist
+    """
+    def test_exception_if_player_doesnt_exist(self):
+        self.world.addPlayer('Morgan',Position(0,1))
+        #Shouldnt throw an exception
+        self.world.setInputMovePlayer(0,90)
+        self.assertRaises(Exception,self.world.setInputMovePlayer,1,90)
+        self.assertRaises(Exception,self.world.setInputTurnPlayer,2,90)
+        self.assertRaises(Exception,self.world.setInputShootPlayer,3)
+        self.assertRaises(Exception,self.world.setInputReloadPlayer,4)
+    """
+    When i set player to move it should set its action only when possible
+    """
     def test_move_player(self):
         self.world.addPlayer('',Position(0,1))
         self.world.addObject(GameObject(Position(1,1)))
         #Player should not be able to move due to game object in the way
-
         self.assertRaises(Exception, self.world.setInputMovePlayer,0,90)
         self.assertEqual(self.world.players[0].action,0)
 
         self.world.setInputMovePlayer(0,180)
         self.assertEqual(self.world.players[0].action,1)
-
+    """
+    When I set player to turn its action is updated
+    """
     def test_turn_player(self):
         self.world.addPlayer('',Position(0,1))
         self.world.setInputTurnPlayer(0,180)
         self.assertEqual(self.world.players[0].direction,0)
         self.world.doStep()
         self.assertEqual(self.world.players[0].direction,180)
+    """
+    When i set a player to reload it should set the correct Action
+    """
+    def test_reload(self):
+        self.world.addPlayer('',Position(0,0))
+        self.world.players[0].amunition = 4
+        self.world.setInputReloadPlayer(0)
+        self.world.doStep()
+        self.assertEqual(self.world.players[0].amunition,10)
+    """
+    I should be able to lock and unlock individual players
+    """
+    def test_lock(self):
+        self.world.addPlayer('tesplayer',Position(0,0))
+        self.world.setInputLockPlayer(0)
+        self.assertEqual(self.world.players[0].locked,True)
+        self.world.setInputUnlockPlayer(0)
+        self.assertEqual(self.world.players[0].locked,False)
 
+    """
+    I should be able to check all players are locked
+    """
+    def test_all_unlcoked(self):
+        self.world.addPlayer('player 1', Position(1,2))
+        self.world.addPlayer('player 2', Position(4,2))
+        self.world.addPlayer('player 3', Position(0,0))
+        self.assertEqual(self.world.allPlayersLocked(),False)
+        self.world.players[0].lock()
+        self.world.players[1].lock()
+        self.assertEqual(self.world.allPlayersLocked(),False)
+        self.world.players[2].lock()
+        self.assertEqual(self.world.allPlayersLocked(),True)
+    """
+    BOOM MAP!
+    """
     def test_draw(self):
         self.world.addPlayer('',Position(2,1))
         self.world.players[0].direction = 180

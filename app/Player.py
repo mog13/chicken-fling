@@ -10,11 +10,17 @@ class Player(GameObject):
         self.action = Action.NONE
         self.actionData = 0
         self.id = id
+        self.locked = False
 
     #reset amunition to 10
     def reload(self):
-        self.amunition = 10;
+        self.amunition = 10
 
+    def lock(self):
+        self.locked = True
+
+    def unlock(self):
+        self.locked = False
     #on update we switch depending on what action we have been given
     def update(self):
         if self.alive == True:
@@ -25,6 +31,9 @@ class Player(GameObject):
                  #fire handled in world
             elif self.action is Action.TURN:
                 self.direction = self.actionData
+
+            elif self.action is Action.RELOAD:
+                self.reload()
 
         #reset the action
         self.action == Action.NONE

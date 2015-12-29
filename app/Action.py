@@ -3,3 +3,4 @@ class Action():
     MOVE = 1
     FIRE = 2
     TURN = 3
+    RELOAD = 4

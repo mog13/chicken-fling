@@ -37,5 +37,12 @@ class PlayerTest(unittest.TestCase):
         self.player.reload();
         self.assertEqual(self.player.amunition,10)
 
+    def test_lock(self):
+        self.assertEqual(self.player.locked,False)
+        self.player.lock()
+        self.assertEqual(self.player.locked,True)
+        self.player.unlock()
+        self.assertEqual(self.player.locked,False)
+
 if __name__ == '__main__':
     unittest.main()

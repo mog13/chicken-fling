@@ -3,6 +3,7 @@ from GameObject import GameObject
 from Bullet import Bullet
 from Position import Position
 from Action import Action
+
 class World:
     def __init__(self, width,height):
         self.width = width
@@ -31,6 +32,7 @@ class World:
 
         #make any player specific moves that involve changing/polutting the object list
         for player in self.players:
+            player.unlock()
             if(player.action == Action.FIRE):
                 shotBullet = Bullet(player.direction,Position(player.position.x,player.position.y))
                 shotBullet.update();
@@ -81,10 +83,14 @@ class World:
                 return True
         return False
 
+    def _playerExists(self,player):
+        return len(self.players) > player
+
+
     #try and set a players action to move
     def setInputMovePlayer(self,player,direction):
         #check the player exists
-        if len(self.players) > player:
+        if self._playerExists(player):
             checkPos = Position(self.players[player].position.x, self.players[player].position.y)
             checkPos.move_in_dir(direction)
 
@@ -93,21 +99,52 @@ class World:
                 self.players[player].actionData = direction
             else:
                 raise Exception('Invalid move')
+        else:
+            raise Exception('Invalid player')
     #try and set a players action to turn
     def setInputTurnPlayer(self,player,direction):
-        if len(self.players) > player:
+        if self._playerExists(player):
             self.players[player].action = Action.TURN
             self.players[player].actionData = direction
+        else:
+            raise Exception('Invalid player')
 
     #try and set a players action to shoot
     def setInputShootPlayer(self,player):
         #check the player exists
-        if len(self.players) > player:
+        if self._playerExists(player):
             #self.addObject(Bullet(self.players[player].direction),self.players[player].position)
             if self.players[player].amunition > 0:
                 self.players[player].action = Action.FIRE
             else:
                 raise Exception('Not enough ammo')
+        else:
+            raise Exception('Invalid player')
+
+    def setInputReloadPlayer(self,player):
+        #check the player exists
+        if len(self.players) > player:
+            self.players[player].action = Action.RELOAD
+        else:
+            raise Exception('Invalid player')
+
+    def setInputLockPlayer(self,player):
+        if self._playerExists(player):
+            self.players[player].lock()
+        else:
+            raise Exception('Invalid player')
+
+    def setInputUnlockPlayer(self,player):
+        if self._playerExists(player):
+            self.players[player].unlock()
+        else:
+            raise Exception('Invalid player')
+
+    def allPlayersLocked(self):
+        for player in self.players:
+            if player.locked == False:
+                return False
+        return True
 
     #world to string draws 2d ASCII map
     def __str__(self):
