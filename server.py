@@ -90,13 +90,17 @@ class Server():
         print "P: " + str(playernum) + ", M: " + method + ", D: " + str(data) + ", C:" + str(command),
 
         if method == "REGISTER":
-            self.world.addPlayer(data['name'], Position(0,0))
+            position = Position(data['position'][0], data['position'][1])
+            self.world.addPlayer(data['name'], position)
         elif method == "MOVE":
             self.world.setInputMovePlayer(playernum, data)
         elif method == "TURN":
             self.world.setInputTurnPlayer(playernum, data)
         elif method == "LOCK":
-            self.world.setInputLockPlayer(playernum)
+            if playernum is None:
+                self.world.lockAllPlayers()
+            else:
+                self.world.setInputLockPlayer(playernum)
         else:
             print "No Commands to run"
 

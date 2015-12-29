@@ -26,6 +26,7 @@ class CommandTest(unittest.TestCase):
         self.assertEqual(self.command.process("1 GET"), (1, "GET", None))
         self.assertEqual(self.command.process("1 LOCK"), (1, "LOCK", None))
         self.assertEqual(self.command.process("1 UNLOCK"), (1, "UNLOCK", None))
+        self.assertEqual(self.command.process("LOCK"), (None, "LOCK", None))
 
     def test_trim(self):
         """
@@ -60,11 +61,14 @@ class CommandTest(unittest.TestCase):
         When I register a player It should sort my data out
         """
         self.assertEqual(self.command.process(
-            '1 REGISTER { "name": "Bruce Wayne" }'),
+            '1 REGISTER { "name": "Bruce Wayne", "position": [ 1, 2 ] }'),
             (
                 1,
                 "REGISTER",
-                { "name": "Bruce Wayne" }
+                {
+                    "name": "Bruce Wayne",
+                    "position": [ 1, 2 ]
+                }
             )
         )
 
