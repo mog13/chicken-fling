@@ -100,6 +100,8 @@ class Server():
             self.world.setInputMovePlayer(playernum, data)
         elif method == "TURN":
             self.world.setInputTurnPlayer(playernum, data)
+        elif method == "SHOOT":
+            self.world.setInputShootPlayer(playernum)
         elif method == "LOCK":
             if playernum is None:
                 self.world.lockAllPlayers()
