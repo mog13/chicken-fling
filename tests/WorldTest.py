@@ -197,6 +197,10 @@ class WorldTest(unittest.TestCase):
         self.world.setInputShootPlayer(0)
         self.world.doStep()
         print(self.world)
+        print('turning west')
+        self.world.setInputTurnPlayer(0,270)
+        self.world.doStep();
+        print(self.world)
         print('moving player right')
         self.world.setInputMovePlayer(0,90)
         self.world.doStep()
@@ -205,5 +209,6 @@ class WorldTest(unittest.TestCase):
         self.world.setInputMovePlayer(0,180)
         self.world.doStep()
         print(self.world)
+
 if __name__ == '__main__':
     unittest.main()

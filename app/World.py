@@ -177,7 +177,16 @@ class World:
 
         for player in self.players:
             pos = (player.position.y * self.width) +player.position.x
-            map[pos] = ' P '
+            if player.direction == 0:
+                map[pos] = ' ^ '
+            elif player.direction == 90:
+                map[pos] = ' > '
+            elif player.direction == 180:
+                map[pos] = ' v '
+            elif player.direction == 270:
+                map[pos] = ' < '
+            else:
+                map[pos] = ' P '
 
         retStr = ''
         for n in range(len(map)):
