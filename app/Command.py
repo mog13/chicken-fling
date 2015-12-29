@@ -1,4 +1,5 @@
 from Direction import Direction
+import json
 
 class Command:
     """
@@ -16,14 +17,15 @@ class Command:
         Given a @command parse it and return an
         object version of the commands
         """
-        splits = command.split()
+        splits = command.split(' ', 2)
         player = int(splits[0])
         method = str(splits[1])
         data = None
 
-        if method == "GET":
-            data = None
-        elif method == "MOVE":
+        if method == "MOVE" or method == "TURN":
             data = Direction.get_degrees(splits[2])
+
+        elif method == "REGISTER":
+            data = json.loads(splits[2])
 
         return (player, method, data)
