@@ -1,6 +1,7 @@
 import sys
 import socket
 import select
+import json
 
 from app.Command import Command
 from app.World import World
@@ -80,6 +81,8 @@ class Server():
 
                     if method == "PRINT":
                         sock.send(str(self.world) + "\n")
+                    if method == "GET":
+                        sock.send(json.dumps(self.world.to_data()) + "\n")
 
                     sock.send("Performing a " + method + "\n")
 
