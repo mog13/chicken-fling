@@ -18,18 +18,21 @@ class Command:
         object version of the commands
         """
         command = command.strip(' \t\n\r')
-
-        if command == "LOCK":
-            return (None, "LOCK", None)
-
-        splits = command.split(' ', 2)
-        player = int(splits[0])
-        method = str(splits[1])
+        player = None
         data = None
 
-        if method == "MOVE" or method == "TURN":
-            data = Direction.get_degrees(splits[2])
-        elif method == "REGISTER":
-            data = json.loads(splits[2])
+        if command == "LOCK":
+            method = "LOCK"
+        elif command == "PRINT":
+            method = "PRINT"
+        else:
+            splits = command.split(' ', 2)
+            player = int(splits[0])
+            method = str(splits[1])
+
+            if method == "MOVE" or method == "TURN":
+                data = Direction.get_degrees(splits[2])
+            elif method == "REGISTER":
+                data = json.loads(splits[2])
 
         return (player, method, data)

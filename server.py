@@ -74,6 +74,10 @@ class Server():
                 command = self._process_read(sock)
                 if command is not None:
                     (playernum, method, data) = self.run_command(command)
+
+                    if method == "PRINT":
+                        sock.send(str(self.world) + "\n")
+
                     sock.send("Performing a " + method + "\n")
 
             if self.world.allPlayersLocked() is True:
@@ -101,8 +105,6 @@ class Server():
                 self.world.lockAllPlayers()
             else:
                 self.world.setInputLockPlayer(playernum)
-        else:
-            print "No Commands to run"
 
         return (playernum, method, data)
 
