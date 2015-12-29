@@ -27,6 +27,16 @@ class CommandTest(unittest.TestCase):
         self.assertEqual(self.command.process("1 LOCK"), (1, "LOCK", None))
         self.assertEqual(self.command.process("1 UNLOCK"), (1, "UNLOCK", None))
 
+    def test_trim(self):
+        """
+        When my command has next lines, ensure that it is trimed
+
+        Found this because the server will send a \n in the command causing it
+        to not pick up the right value for method
+        """
+        self.assertEqual(self.command.process("1 MOVE SOUTH\n"), (1, "MOVE", 180))
+
+
     def test_move(self):
         """
         When I Move east I should get 90 degrees back

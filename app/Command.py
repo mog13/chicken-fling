@@ -17,7 +17,7 @@ class Command:
         Given a @command parse it and return an
         object version of the commands
         """
-        splits = command.split(' ', 2)
+        splits = command.strip(' \t\n\r').split(' ', 2)
         player = int(splits[0])
         method = str(splits[1])
         data = None

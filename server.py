@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python -u
 
 import signal
 import sys
@@ -70,7 +70,8 @@ class Server():
             for sock in ready_to_read:
                 command = self._process_read(sock)
                 if command is not None:
-                    print self.command.process(command),
+                    (playernum, method, data) = self.command.process(str(command))
+                    print "P: " + str(playernum) + ", M: " + method + ", D: " + str(data) + ", C:" + str(command),
                     sock.send("This is my response for you: :D :D\n")
 
         self.mysock.close()
