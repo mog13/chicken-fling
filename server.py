@@ -6,6 +6,8 @@ import socket
 import select
 
 from app.Command import Command
+from app.World import World
+from app.Position import Position
 
 class Server():
     """
@@ -26,6 +28,7 @@ class Server():
         self.mysock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
         self.command = Command()
+        self.world = World(10, 10)
 
     def _process_read(self, sock):
         """
@@ -70,11 +73,34 @@ class Server():
             for sock in ready_to_read:
                 command = self._process_read(sock)
                 if command is not None:
-                    (playernum, method, data) = self.command.process(str(command))
-                    print "P: " + str(playernum) + ", M: " + method + ", D: " + str(data) + ", C:" + str(command),
+                    (playernum, method, data) = self.run_command(command)
                     sock.send("Performing a " + method + "\n")
 
+            if self.world.allPlayersLocked() is True:
+                self.world.doStep()
+                print self.world
+
         self.mysock.close()
+
+    def run_command(self, command):
+        """
+        for each command that comes in process it
+        """
+        (playernum, method, data) = self.command.process(str(command))
+        print "P: " + str(playernum) + ", M: " + method + ", D: " + str(data) + ", C:" + str(command),
+
+        if method == "REGISTER":
+            self.world.addPlayer(data['name'], Position(0,0))
+        elif method == "MOVE":
+            self.world.setInputMovePlayer(playernum, data)
+        elif method == "TURN":
+            self.world.setInputTurnPlayer(playernum, data)
+        elif method == "LOCK":
+            self.world.setInputLockPlayer(playernum)
+        else:
+            print "No Commands to run"
+
+        return (playernum, method, data)
 
 """
 Simple class for general program variables

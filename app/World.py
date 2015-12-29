@@ -3,6 +3,8 @@ from GameObject import GameObject
 from Bullet import Bullet
 from Position import Position
 from Action import Action
+from exceptions.InvalidPlayer import InvalidPlayer
+
 
 class World:
     def __init__(self, width,height):
@@ -105,14 +107,14 @@ class World:
             else:
                 raise Exception('Invalid move')
         else:
-            raise Exception('Invalid player')
+            raise InvalidPlayer("Player (" + str(player) + ") not found")
     #try and set a players action to turn
     def setInputTurnPlayer(self,player,direction):
         if self._playerExists(player):
             self.players[player].action = Action.TURN
             self.players[player].actionData = direction
         else:
-            raise Exception('Invalid player')
+            raise InvalidPlayer("Player (" + str(player) + ") not found")
 
     #try and set a players action to shoot
     def setInputShootPlayer(self,player):
@@ -124,26 +126,26 @@ class World:
             else:
                 raise Exception('Not enough ammo')
         else:
-            raise Exception('Invalid player')
+            raise InvalidPlayer("Player (" + str(player) + ") not found")
 
     def setInputReloadPlayer(self,player):
         #check the player exists
         if len(self.players) > player:
             self.players[player].action = Action.RELOAD
         else:
-            raise Exception('Invalid player')
+            raise InvalidPlayer("Player (" + str(player) + ") not found")
 
     def setInputLockPlayer(self,player):
         if self._playerExists(player):
             self.players[player].lock()
         else:
-            raise Exception('Invalid player')
+            raise InvalidPlayer("Player (" + str(player) + ") not found")
 
     def setInputUnlockPlayer(self,player):
         if self._playerExists(player):
             self.players[player].unlock()
         else:
-            raise Exception('Invalid player')
+            raise InvalidPlayer("Player (" + str(player) + ") not found")
 
     def allPlayersLocked(self):
         for player in self.players:
@@ -156,17 +158,17 @@ class World:
         #build a map to fill with all the objects
         map = []
         for n in range(self.width*self.height):
-            map.append('[ ]')
+            map.append(' - ')
         for obj in self.objects:
             pos = (obj.position.y * self.width) +obj.position.x
             if isinstance(obj,Bullet):
-                map[pos] = '[B]'
+                map[pos] = ' B '
             else:
-                map[pos] = '[X]'
+                map[pos] = ' X '
 
         for player in self.players:
             pos = (player.position.y * self.width) +player.position.x
-            map[pos] = '[P]'
+            map[pos] = ' P '
 
         retStr = ''
         for n in range(len(map)):

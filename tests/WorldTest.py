@@ -12,6 +12,8 @@ from app.Position  import Position
 from app.Player import Player
 from app.Bullet import Bullet
 from app.GameObject import GameObject
+from app.exceptions.InvalidPlayer import InvalidPlayer
+
 """
 This class tests the ControllerBase by creating a mock from this
 Base class
@@ -102,10 +104,10 @@ class WorldTest(unittest.TestCase):
         self.world.addPlayer('Morgan',Position(0,1))
         #Shouldnt throw an exception
         self.world.setInputMovePlayer(0,90)
-        self.assertRaises(Exception,self.world.setInputMovePlayer,1,90)
-        self.assertRaises(Exception,self.world.setInputTurnPlayer,2,90)
-        self.assertRaises(Exception,self.world.setInputShootPlayer,3)
-        self.assertRaises(Exception,self.world.setInputReloadPlayer,4)
+        self.assertRaises(InvalidPlayer,self.world.setInputMovePlayer,1,90)
+        self.assertRaises(InvalidPlayer,self.world.setInputTurnPlayer,2,90)
+        self.assertRaises(InvalidPlayer,self.world.setInputShootPlayer,3)
+        self.assertRaises(InvalidPlayer,self.world.setInputReloadPlayer,4)
     """
     When i set player to move it should set its action only when possible
     """
