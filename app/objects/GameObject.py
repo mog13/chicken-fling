@@ -4,13 +4,13 @@ class GameObject(object):
     alive = True
     colideable = True
     type = "unknown"
+    direction = 0
     def __init__(self, position):
         self.position = position
 
     #Move object in a given direction by a given amount
     def move(self,amount,direction):
         self.position.move_in_dir(direction,amount)
-
 
     #do nothing by default on an update
     def update(self):
@@ -34,4 +34,4 @@ class GameObject(object):
             self._on_collision(gameObject)
 
     def to_data(self):
-        return { "type": self.type, "position": [ self.position.x, self.position.y ] }
+        return { "type": self.type, "position": [ self.position.x, self.position.y ], "direction": self.direction }

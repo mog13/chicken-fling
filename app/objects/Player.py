@@ -5,7 +5,6 @@ class Player(GameObject):
     def __init__(self,name,id):
         super(GameObject, self).__init__()
         self.name = name
-        self.direction = 0
         self.amunition = 10
         self.action = Action.NONE
         self.actionData = 0
