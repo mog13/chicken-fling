@@ -24,7 +24,6 @@ class Command:
 
         if method == "MOVE" or method == "TURN":
             data = Direction.get_degrees(splits[2])
-
         elif method == "REGISTER":
             data = json.loads(splits[2])
 

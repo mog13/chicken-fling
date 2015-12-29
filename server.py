@@ -72,7 +72,7 @@ class Server():
                 if command is not None:
                     (playernum, method, data) = self.command.process(str(command))
                     print "P: " + str(playernum) + ", M: " + method + ", D: " + str(data) + ", C:" + str(command),
-                    sock.send("This is my response for you: :D :D\n")
+                    sock.send("Performing a " + method + "\n")
 
         self.mysock.close()
 
