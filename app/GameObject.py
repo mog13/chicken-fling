@@ -2,7 +2,7 @@
 class GameObject(object):
 
     alive = True
-
+    colideable = True
     def __init__(self, position):
         self.position = position
 
@@ -15,9 +15,10 @@ class GameObject(object):
     def update(self):
         pass
 
+
     #returns if this object is colliding with the given one
     def is_collision(self,gameObject):
-        return self.position.x == gameObject.position.x and self.position.y == gameObject.position.y
+            return gameObject.colideable and self.position.x == gameObject.position.x and self.position.y == gameObject.position.y
 
     #logic on what to do on collision
     def _on_collision(self, gameObject):

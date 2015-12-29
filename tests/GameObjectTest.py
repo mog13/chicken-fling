@@ -45,5 +45,6 @@ class GameObjectTest(unittest.TestCase):
         self.gameObject.has_collision(bullet)
         self.assertEqual(self.gameObject.alive,True)
 
+
 if __name__ == '__main__':
     unittest.main()

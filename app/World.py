@@ -37,10 +37,12 @@ class World:
         #make any player specific moves that involve changing/polutting the object list
         for player in self.players:
             player.unlock()
-            if(player.action == Action.FIRE):
+            if player.action == Action.FIRE:
                 shotBullet = Bullet(player.direction,Position(player.position.x,player.position.y))
                 shotBullet.update();
                 self.addObject(shotBullet)
+            if player.alive == False:
+                player.colideable = False
 
         #iterate over all objects to update
         for obj in all_objects:

@@ -13,3 +13,6 @@ class Bullet(GameObject):
     #Always move each update
     def update(self):
         self.move(1,self.direction)
+
+    def _on_collision(self, gameObject):
+        self.alive = False

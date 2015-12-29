@@ -49,48 +49,53 @@ class WorldTest(unittest.TestCase):
     def test_step(self):
         #create two bullets and a a player in position 0,0... all should die
         self.world.addObject(Bullet(180,Position()))
-        self.world.addObject(Bullet(180,Position()))
-        self.world.addPlayer('Morgan',Position())
-        self.world.players[0].position.y = 1
-        self.world.addPlayer('Shahmir',Position())
-        self.world.players[1].position.y = 1
+        self.world.addPlayer('Morgan',Position(0,1))
+        self.world.addPlayer('Shahmir',Position(0,1))
         self.world.doStep()
-        self.assertEqual(len(self.world.objects),0)
+
         self.assertEqual(self.world.players[0].alive,False)
         self.assertEqual(self.world.players[1].alive,False)
+        self.assertEqual(len(self.world.objects),0)
 
+    """
+    When a bullet hits a player both should die.
+    overlapping or unrelated objects should not affect each other
+    """
     def test_step2(self):
-        self.world.addObject(Bullet(180,Position(5,2)))
-        self.world.addObject(Bullet(90,Position(1,3)))
+        self.world.addObject(Bullet(180,Position(0,0)))
+        self.world.addObject(Bullet(90,Position(0,0)))
         #Morgan should live!
         self.world.addPlayer('Morgan',Position())
         #shahmir should die!
-        self.world.addPlayer('Shahmir',Position(2,3))
+        self.world.addPlayer('Shahmir',Position(1,0))
         #Add random object to check there not destoryed by player 0
         self.world.addObject(GameObject(Position()))
         self.world.addObject(GameObject(Position()))
         self.world.doStep()
-        self.assertEqual(len(self.world.objects),4)
+        self.assertEqual(len(self.world.objects),3)
         self.assertEqual(self.world.players[0].alive,True)
         self.assertEqual(self.world.players[1].alive,False)
 
+    """
+    When a player dies bullets should ignore it
+    """
     def test_multiple_steps(self):
-        self.world.addPlayer('Bruce Wayne',Position())
+        self.world.addPlayer('Bruce Wayne',Position(0,0))
         self.world.addPlayer('Thomas Wayne',Position(4,1))
         self.world.addPlayer('Martha Wayne',Position(3,1))
-
+        self.world.addObject(Bullet(90,Position(1,1)))
         self.world.addObject(Bullet(90,Position(0,1)))
         self.world.doStep()
         self.world.doStep()
-
         self.assertEqual(self.world.players[0].alive,True)
         self.assertEqual(self.world.players[1].alive,True)
-        self.assertEqual(self.world.players[2].alive,True)
+        self.assertEqual(self.world.players[2].alive,False)
         self.world.doStep()
         self.assertEqual(self.world.players[2].alive,False)
         self.world.doStep()
         self.assertEqual(self.world.players[1].alive,False)
         self.assertEqual(self.world.players[0].alive,True)
+        self.world.doStep()
     """
     When an object occupies a space it should return false when checked with checkSpaceEmpty
     """
@@ -162,7 +167,7 @@ class WorldTest(unittest.TestCase):
     """
     I should be able to check all players are locked
     """
-    def test_all_unlcoked(self):
+    def test_all_unlocked(self):
         self.assertEqual(self.world.allPlayersLocked(),False)
         self.world.addPlayer('player 1', Position(1,2))
         self.world.addPlayer('player 2', Position(4,2))
@@ -177,7 +182,7 @@ class WorldTest(unittest.TestCase):
     """
     I should be able to lock all the players at once
     """
-    def test_lock_all_pplayers(self):
+    def test_lock_all_players(self):
         self.assertEqual(self.world.allPlayersLocked(),False)
         self.world.addPlayer('player 1', Position(1,2))
         self.world.addPlayer('player 2', Position(4,2))
