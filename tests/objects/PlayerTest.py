@@ -46,5 +46,11 @@ class PlayerTest(unittest.TestCase):
         self.player.unlock()
         self.assertEqual(self.player.locked,False)
 
+    """
+    When I get_data from player it should include the locked data
+    """
+    def test_to_data(self):
+        self.assertEqual(self.player.to_data(),{ "type":"player", "position":[0,0], "direction": 0, "alive": True, "locked":False})
+
 if __name__ == '__main__':
     unittest.main()

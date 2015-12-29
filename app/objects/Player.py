@@ -37,3 +37,8 @@ class Player(GameObject):
 
         #reset the action
         self.action == Action.NONE
+
+    def to_data(self):
+        data = super(Player,self).to_data()
+        data['locked'] = self.locked
+        return data
