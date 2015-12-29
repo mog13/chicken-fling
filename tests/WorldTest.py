@@ -13,6 +13,9 @@ from app.Player import Player
 from app.Bullet import Bullet
 from app.GameObject import GameObject
 from app.exceptions.InvalidPlayer import InvalidPlayer
+from app.exceptions.InvalidMove import InvalidMove
+from app.exceptions.OutOfAmmo import OutOfAmmo
+
 
 """
 This class tests the ControllerBase by creating a mock from this
@@ -115,7 +118,7 @@ class WorldTest(unittest.TestCase):
         self.world.addPlayer('',Position(0,1))
         self.world.addObject(GameObject(Position(1,1)))
         #Player should not be able to move due to game object in the way
-        self.assertRaises(Exception, self.world.setInputMovePlayer,0,90)
+        self.assertRaises(InvalidMove, self.world.setInputMovePlayer,0,90)
         self.assertEqual(self.world.players[0].action,0)
 
         self.world.setInputMovePlayer(0,180)
@@ -138,6 +141,14 @@ class WorldTest(unittest.TestCase):
         self.world.setInputReloadPlayer(0)
         self.world.doStep()
         self.assertEqual(self.world.players[0].amunition,10)
+
+    """
+    When i try and shoot with no ammo an exception should be raised
+    """
+    def test_out_of_ammo(self):
+        self.world.addPlayer('',Position(0,0))
+        self.world.players[0].amunition = 0;
+        self.assertRaises(OutOfAmmo,self.world.setInputShootPlayer,0)
     """
     I should be able to lock and unlock individual players
     """
@@ -152,6 +163,7 @@ class WorldTest(unittest.TestCase):
     I should be able to check all players are locked
     """
     def test_all_unlcoked(self):
+        self.assertEqual(self.world.allPlayersLocked(),False)
         self.world.addPlayer('player 1', Position(1,2))
         self.world.addPlayer('player 2', Position(4,2))
         self.world.addPlayer('player 3', Position(0,0))
@@ -161,6 +173,18 @@ class WorldTest(unittest.TestCase):
         self.assertEqual(self.world.allPlayersLocked(),False)
         self.world.players[2].lock()
         self.assertEqual(self.world.allPlayersLocked(),True)
+
+    """
+    I should be able to lock all the players at once
+    """
+    def test_lock_all_pplayers(self):
+        self.assertEqual(self.world.allPlayersLocked(),False)
+        self.world.addPlayer('player 1', Position(1,2))
+        self.world.addPlayer('player 2', Position(4,2))
+        self.world.addPlayer('player 3', Position(0,0))
+        self.world.lockAllPlayers()
+        self.assertEqual(self.world.allPlayersLocked(),True)
+
     """
     BOOM MAP!
     """

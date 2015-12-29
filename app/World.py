@@ -4,6 +4,8 @@ from Bullet import Bullet
 from Position import Position
 from Action import Action
 from exceptions.InvalidPlayer import InvalidPlayer
+from exceptions.InvalidMove import InvalidMove
+from exceptions.OutOfAmmo import OutOfAmmo
 
 
 class World:
@@ -105,7 +107,7 @@ class World:
                 self.players[player].action = Action.MOVE
                 self.players[player].actionData = direction
             else:
-                raise Exception('Invalid move')
+                raise InvalidMove("Invalid move Player (" + str(player) + ") in direction " + str(direction))
         else:
             raise InvalidPlayer("Player (" + str(player) + ") not found")
     #try and set a players action to turn
@@ -124,7 +126,7 @@ class World:
             if self.players[player].amunition > 0:
                 self.players[player].action = Action.FIRE
             else:
-                raise Exception('Not enough ammo')
+                raise OutOfAmmo('Not enough ammo')
         else:
             raise InvalidPlayer("Player (" + str(player) + ") not found")
 
@@ -147,7 +149,14 @@ class World:
         else:
             raise InvalidPlayer("Player (" + str(player) + ") not found")
 
+    def lockAllPlayers(self):
+        for player in self.players:
+            player.lock()
+
     def allPlayersLocked(self):
+        if len(self.players) == False:
+            return False
+
         for player in self.players:
             if player.locked == False:
                 return False
