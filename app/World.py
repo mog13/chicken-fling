@@ -1,6 +1,6 @@
-from Player import Player
-from GameObject import GameObject
-from Bullet import Bullet
+from app.objects.Player import Player
+from app.objects.GameObject import GameObject
+from app.objects.Bullet import Bullet
 from Position import Position
 from Action import Action
 from exceptions.InvalidPlayer import InvalidPlayer
@@ -165,7 +165,7 @@ class World:
                 return False
         return True
 
-    
+
 
     #world to string draws 2d ASCII map
     def __str__(self):

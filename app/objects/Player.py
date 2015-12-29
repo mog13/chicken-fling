@@ -1,5 +1,5 @@
 from GameObject import GameObject
-from Action import Action
+from app.Action import Action
 
 class Player(GameObject):
     def __init__(self,name,id):

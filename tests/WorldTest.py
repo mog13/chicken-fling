@@ -9,9 +9,9 @@ import unittest
 # Local includes
 from app.World import World
 from app.Position  import Position
-from app.Player import Player
-from app.Bullet import Bullet
-from app.GameObject import GameObject
+from app.objects.Player import Player
+from app.objects.Bullet import Bullet
+from app.objects.GameObject import GameObject
 from app.exceptions.InvalidPlayer import InvalidPlayer
 from app.exceptions.InvalidMove import InvalidMove
 from app.exceptions.OutOfAmmo import OutOfAmmo

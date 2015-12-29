@@ -7,8 +7,8 @@ This class tests the Index Controller
 import unittest
 
 # Local includes
-from app.Player import Player
-from app.GameObject import GameObject
+from app.objects.Player import Player
+from app.objects.GameObject import GameObject
 from app.Position import Position
 from app.Action import Action
 
