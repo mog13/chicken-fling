@@ -52,7 +52,7 @@ class GameObjectTest(unittest.TestCase):
     I should be able to get data
     """
     def test_to_data(self):
-        self.assertEqual(self.gameObject.to_data(),{ "type":"unknown", "position":[0,0], "direction": 0})
+        self.assertEqual(self.gameObject.to_data(),{ "type":"unknown", "position":[0,0], "direction": 0, "alive": True})
 
 if __name__ == '__main__':
     unittest.main()

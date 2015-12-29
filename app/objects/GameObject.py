@@ -34,4 +34,9 @@ class GameObject(object):
             self._on_collision(gameObject)
 
     def to_data(self):
-        return { "type": self.type, "position": [ self.position.x, self.position.y ], "direction": self.direction }
+        return {
+            "type": self.type,
+            "position": [ self.position.x, self.position.y ],
+            "direction": self.direction,
+            "alive": self.alive
+        }
