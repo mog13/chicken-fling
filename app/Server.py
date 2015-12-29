@@ -108,7 +108,7 @@ class Server():
 
         if method == "REGISTER":
             position = Position(data['position'][0], data['position'][1])
-            self.world.addPlayer(data['name'], position)
+            self.world.addPlayer(str(data['name']), position)
         elif method == "MOVE":
             self.world.setInputMovePlayer(playernum, data)
         elif method == "TURN":
