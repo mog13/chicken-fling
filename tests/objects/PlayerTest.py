@@ -9,6 +9,7 @@ import unittest
 # Local includes
 from app.objects.Player import Player
 from app.objects.GameObject import GameObject
+from app.World  import World
 from app.Position import Position
 from app.Action import Action
 
@@ -33,8 +34,9 @@ class PlayerTest(unittest.TestCase):
     """
     def test_reload(self):
         self.player.action = Action.FIRE;
-        self.player.update();
-        self.player.update();
+        world = World(5,5)
+        self.player.update(world);
+        self.player.update(world);
         self.assertEqual(self.player.amunition,8)
         self.player.reload();
         self.assertEqual(self.player.amunition,10)

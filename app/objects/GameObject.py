@@ -15,7 +15,7 @@ class GameObject(object):
         self.position.move_in_dir(direction,amount)
 
     #do nothing by default on an update
-    def update(self):
+    def update(self,world):
         pass
 
     def get_type(self):

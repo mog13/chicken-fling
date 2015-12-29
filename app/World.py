@@ -1,6 +1,8 @@
 from app.objects.Player import Player
 from app.objects.GameObject import GameObject
 from app.objects.Bullet import Bullet
+from app.objects.Barrel import Barrel
+from app.objects.Fire import Fire
 from Position import Position
 from Action import Action
 from exceptions.InvalidPlayer import InvalidPlayer
@@ -34,19 +36,9 @@ class World:
         #create a list of all Objects including players
         all_objects = self.players + self.objects
 
-        #make any player specific moves that involve changing/polutting the object list
-        for player in self.players:
-            player.unlock()
-            if player.action == Action.FIRE:
-                shotBullet = Bullet(player.direction,Position(player.position.x,player.position.y))
-                shotBullet.update();
-                self.addObject(shotBullet)
-            if player.alive == False:
-                player.colideable = False
-
         #iterate over all objects to update
         for obj in all_objects:
-            obj.update()
+            obj.update(self)
             if self.checkInWorld(obj.position) == False:
                 obj.alive = False;
 
@@ -190,6 +182,10 @@ class World:
             if obj.alive and pos < len(map):
                 if isinstance(obj,Bullet):
                     map[pos] = ' B '
+                elif isinstance(obj,Barrel):
+                    map[pos] = ' o '
+                elif isinstance(obj,Fire):
+                    map[pos] = ' F '
                 else:
                     map[pos] = ' X '
 
