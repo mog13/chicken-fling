@@ -62,6 +62,11 @@ class World:
         for n in range(len(deadIndexs)):
             self.objects.remove(deadIndexs[n])
 
+
+        #Reset all actions
+        for player in self.players:
+            player.action = Action.NONE
+
     #Check a given position is in the world
     def checkInWorld(self,position):
         if position.x <0 or position.x > self.width:
