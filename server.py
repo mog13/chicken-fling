@@ -5,6 +5,8 @@ import sys
 import socket
 import select
 
+from app.Command import Command
+
 class Server():
     """
     This class is simply setting up the connections and
@@ -22,6 +24,8 @@ class Server():
         """
         self.mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.mysock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+        self.command = Command()
 
     def _process_read(self, sock):
         """
@@ -66,7 +70,7 @@ class Server():
             for sock in ready_to_read:
                 command = self._process_read(sock)
                 if command is not None:
-                    print command,
+                    print self.command.process(command),
                     sock.send("This is my response for you: :D :D\n")
 
         self.mysock.close()
