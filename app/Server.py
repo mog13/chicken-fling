@@ -7,6 +7,10 @@ import logging
 from app.Command import Command
 from app.World import World
 from app.Position import Position
+from app.exceptions.InvalidMove import InvalidMove
+from app.exceptions.InvalidPlayer import InvalidPlayer
+from app.exceptions.OutOfAmmo import OutOfAmmo
+
 
 class Server():
     """
@@ -48,19 +52,19 @@ class Server():
         if sock == self.mysock:
             sockfd, addr = self.mysock.accept()
             self.SOCKETS.append(sockfd)
-            print "Client (%s, %s) connected" % addr
+            logging.info("Client (%s, %s) connected", addr[0], addr[1])
         else:
             data = sock.recv(self.BUFFER_SIZE)
             if data:
                 try:
                     return data.decode("utf-8")
                 except UnicodeDecodeError as e:
-                    print >> sys.stderr, "Warning: " + str(e)
+                    logging.warning(str(e))
             else:
                 # remove the socket that's broken
                 if sock in Server.SOCKETS:
                     self.SOCKETS.remove(sock)
-                    print "Removed connection"
+                    logging.info("Removed connection")
 
         return None
 
@@ -70,7 +74,7 @@ class Server():
         """
         self.mysock.bind((self.HOST, self.PORT))
         self.mysock.listen(10)
-        print 'Listening on %s port %s' % (self.HOST, self.PORT)
+        logging.info('Listening on %s port %s', self.HOST, self.PORT)
 
         self.SOCKETS.append(self.mysock)
 
@@ -91,11 +95,11 @@ class Server():
                     if method == "GET":
                         sock.send(json.dumps(self.world.to_data()) + "\n")
 
-                    sock.send("Performing a " + method + "\n")
+                    #sock.send("Performing a " + method + "\n")
 
             if self.world.allPlayersLocked() is True:
                 self.world.doStep()
-                print self.world
+                logging.info(self.world)
 
         self.mysock.close()
 
@@ -103,22 +107,32 @@ class Server():
         """
         for each command that comes in process it
         """
-        (playernum, method, data) = self.command.process(str(command))
-        logging.info("P: " + str(playernum) + ", M: " + method + ", D: " + str(data) + ", C:" + str(command))
 
-        if method == "REGISTER":
-            position = Position(data['position'][0], data['position'][1])
-            self.world.addPlayer(str(data['name']), position)
-        elif method == "MOVE":
-            self.world.setInputMovePlayer(playernum, data)
-        elif method == "TURN":
-            self.world.setInputTurnPlayer(playernum, data)
-        elif method == "SHOOT":
-            self.world.setInputShootPlayer(playernum)
-        elif method == "LOCK":
-            if playernum is None:
-                self.world.lockAllPlayers()
-            else:
-                self.world.setInputLockPlayer(playernum)
+        command = str(command).strip()
+
+        (playernum, method, data) = self.command.process(command)
+        logging.info("P: " + str(playernum) + ", M: " + method + ", D: " + str(data) + ", C:" + command)
+
+        try:
+            if method == "REGISTER":
+                position = Position(data['position'][0], data['position'][1])
+                self.world.addPlayer(str(data['name']), position)
+            elif method == "MOVE":
+                self.world.setInputMovePlayer(playernum, data)
+            elif method == "TURN":
+                self.world.setInputTurnPlayer(playernum, data)
+            elif method == "SHOOT":
+                self.world.setInputShootPlayer(playernum)
+            elif method == "LOCK":
+                if playernum is None:
+                    self.world.lockAllPlayers()
+                else:
+                    self.world.setInputLockPlayer(playernum)
+        except InvalidMove as e:
+            logging.warning("Invalid Move: " + str(e))
+        except InvalidPlayer as e:
+            logging.warning("Invalid Player: " + e.message)
+        except OutOfAmmo as e:
+            logging.info("OutOfAmmo: " + str(e))
 
         return (playernum, method, data)

@@ -2,6 +2,7 @@
 
 import signal
 import select
+import logging
 
 from app.Server import Server
 
@@ -12,14 +13,15 @@ class ChickenFling:
 
     @staticmethod
     def signal_int(signal, frame):
-        print "\nShutting Down...",
+        logging.info("Shutting Down...")
 
     @staticmethod
     def main():
+        logging.basicConfig(level=logging.DEBUG)
         signal.signal(signal.SIGINT, ChickenFling.signal_int)
         server = Server()
         server.listen()
-        print "Exiting!"
+        logging.info("Exiting!")
 
 if __name__ == '__main__':
     ChickenFling.main()

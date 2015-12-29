@@ -21,6 +21,9 @@ class ServerTest(unittest.TestCase):
         self.server = Server()
 
     def test_get_world(self):
+        """
+        When I get an instance of the Server it should return the world
+        """
         self.assertIsInstance(self.server.get_world(), World)
 
     def test_set_world(self):
@@ -33,7 +36,6 @@ class ServerTest(unittest.TestCase):
         self.server.set_world(world)
         self.assertEqual(self.server.get_world().width, 5)
         self.assertEqual(self.server.get_world().width, 5)
-
 
     def test_command_register(self):
         """
@@ -91,7 +93,6 @@ class ServerTest(unittest.TestCase):
         world.setInputLockPlayer = MagicMock(name='setInputLockPlayer')
         self.server.run_command('1 LOCK')
         world.setInputLockPlayer.assert_called_once_with(1)
-
 
 if __name__ == '__main__':
     unittest.main()

@@ -205,7 +205,7 @@ class World:
 
         retStr = ''
         for n in range(len(map)):
-            if(n%(self.width) == 0):
+            if n%(self.width) == 0 and n != 0:
                 retStr += '\n'
             retStr += map[n]
 
