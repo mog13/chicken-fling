@@ -45,6 +45,14 @@ class GameObjectTest(unittest.TestCase):
         self.gameObject.has_collision(bullet)
         self.assertEqual(self.gameObject.alive,True)
 
+    def test_get_type(self):
+        self.assertEqual(self.gameObject.get_type(), "unknown")
+
+    """
+    I should be able to get data
+    """
+    def test_to_data(self):
+        self.assertEqual(self.gameObject.to_data(),{ "type":"unknown", "position":[0,0]})
 
 if __name__ == '__main__':
     unittest.main()

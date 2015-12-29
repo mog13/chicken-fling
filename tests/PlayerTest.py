@@ -25,6 +25,8 @@ class PlayerTest(unittest.TestCase):
     """
     def test_defaults(self):
         self.assertEqual(self.player.name,'morgan')
+        self.assertEqual(self.player.get_type(), "player")
+
 
     """
     When firing it should remove a bullet and reload should replace them

@@ -3,6 +3,7 @@ class GameObject(object):
 
     alive = True
     colideable = True
+    type = "unknown"
     def __init__(self, position):
         self.position = position
 
@@ -15,6 +16,8 @@ class GameObject(object):
     def update(self):
         pass
 
+    def get_type(self):
+        return self.type
 
     #returns if this object is colliding with the given one
     def is_collision(self,gameObject):
@@ -29,3 +32,6 @@ class GameObject(object):
     def has_collision(self,gameObject):
         if(self.is_collision(gameObject)):
             self._on_collision(gameObject)
+
+    def to_data(self):
+        return { "type": self.type, "position": [ self.position.x, self.position.y ] }

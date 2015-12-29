@@ -11,6 +11,7 @@ class Player(GameObject):
         self.actionData = 0
         self.id = id
         self.locked = False
+        self.type = "player"
 
     #reset amunition to 10
     def reload(self):

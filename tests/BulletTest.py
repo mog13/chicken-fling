@@ -29,6 +29,8 @@ class BulletTest(unittest.TestCase):
         self.bullet.update();
         self.assertEqual(self.bullet.position.x,0)
         self.assertEqual(self.bullet.position.y,-2)
+        self.assertEqual(self.bullet.get_type(), "bullet")
+
 
 
 if __name__ == '__main__':

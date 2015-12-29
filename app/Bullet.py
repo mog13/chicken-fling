@@ -9,6 +9,7 @@ class Bullet(GameObject):
         #I dont know why i cant delete this :(?!
         self.position = position
         self.direction = direction
+        self.type = "bullet"
 
     #Always move each update
     def update(self):

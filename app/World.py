@@ -165,6 +165,8 @@ class World:
                 return False
         return True
 
+    
+
     #world to string draws 2d ASCII map
     def __str__(self):
         #build a map to fill with all the objects
