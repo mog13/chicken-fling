@@ -6,11 +6,11 @@ class Direction:
 
     @staticmethod
     def get_degrees(direction):
-        if direction == "EAST":
+        if direction == "EAST" or direction == "RIGHT":
             return 90
-        elif direction == "SOUTH":
+        elif direction == "SOUTH" or direction == "DOWN":
             return 180
-        elif direction == "WEST":
+        elif direction == "WEST" or direction == "LEFT":
             return 270
         else:
             return 0
