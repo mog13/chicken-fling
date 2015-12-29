@@ -25,6 +25,8 @@ class Command:
             method = "LOCK"
         elif command == "PRINT":
             method = "PRINT"
+        elif command == "GET":
+            method = "GET"
         else:
             splits = command.split(' ', 2)
             player = int(splits[0])

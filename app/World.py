@@ -165,6 +165,18 @@ class World:
                 return False
         return True
 
+    def to_data(self):
+        all_objects = self.players + self.objects
+        data = {}
+        data['world'] = {
+            "width": self.width,
+            "height": self.height
+        }
+        data['objects'] = []
+        for objects in all_objects:
+            data['objects'].append(objects.to_data())
+
+        return data
 
 
     #world to string draws 2d ASCII map

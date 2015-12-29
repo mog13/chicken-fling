@@ -191,6 +191,28 @@ class WorldTest(unittest.TestCase):
         self.assertEqual(self.world.allPlayersLocked(),True)
 
     """
+    We should be able to get all objects as JSON
+    """
+    def test_to_data(self):
+        bullet = Bullet(0,Position())
+        player = Player('playa',Position())
+
+        self.world.addObject(bullet)
+        self.world.addObject(player)
+        self.assertEqual(
+            self.world.to_data(),
+            {
+                "world": {
+                    "width": 5,
+                    "height": 5
+                },
+                "objects": [
+                    bullet.to_data(),
+                    player.to_data()
+                ]
+            }
+        )
+    """
     BOOM MAP!
     """
     def test_draw(self):

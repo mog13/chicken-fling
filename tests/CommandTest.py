@@ -23,7 +23,7 @@ class CommandTest(unittest.TestCase):
         """
         When I send GET I should just get the values as expected
         """
-        self.assertEqual(self.command.process("1 GET"), (1, "GET", None))
+        self.assertEqual(self.command.process("GET"), (None, "GET", None))
         self.assertEqual(self.command.process("1 LOCK"), (1, "LOCK", None))
         self.assertEqual(self.command.process("1 UNLOCK"), (1, "UNLOCK", None))
         self.assertEqual(self.command.process("1 SHOOT"), (1, "SHOOT", None))

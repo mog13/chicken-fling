@@ -1,3 +1,4 @@
+from app.Position import Position
 
 class GameObject(object):
 
@@ -5,6 +6,7 @@ class GameObject(object):
     colideable = True
     type = "unknown"
     direction = 0
+    position = Position()
     def __init__(self, position):
         self.position = position
 
