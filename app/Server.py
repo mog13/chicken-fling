@@ -2,6 +2,7 @@ import sys
 import socket
 import select
 import json
+import logging
 
 from app.Command import Command
 from app.World import World
@@ -26,7 +27,13 @@ class Server():
         self.mysock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
         self.command = Command()
-        self.world = World(10, 10)
+        self.set_world(World(10, 10))
+
+    def set_world(self, world):
+        """
+        The setter for world
+        """
+        self.world = world
 
     def get_world(self):
         """
@@ -53,7 +60,7 @@ class Server():
                 # remove the socket that's broken
                 if sock in Server.SOCKETS:
                     self.SOCKETS.remove(sock)
-                    print("Removed connection")
+                    print "Removed connection"
 
         return None
 
@@ -97,7 +104,7 @@ class Server():
         for each command that comes in process it
         """
         (playernum, method, data) = self.command.process(str(command))
-        print "P: " + str(playernum) + ", M: " + method + ", D: " + str(data) + ", C:" + str(command),
+        logging.info("P: " + str(playernum) + ", M: " + method + ", D: " + str(data) + ", C:" + str(command))
 
         if method == "REGISTER":
             position = Position(data['position'][0], data['position'][1])
